@@ -1,33 +1,30 @@
 import { createStore } from "redux";
 
-const add = document.getElementById("add");
-const minus = document.getElementById("minus");
-const number = document.querySelector("span");
+const input = document.getElementById("todoInput");
+const lists = document.querySelector(".list");
+const form = document.querySelector("form");
 
-number.innerText = 0;
+const ADD_TODO = "ADD_TODO";
+const DELETE_TODO = "DELETE_TODO";
 
-const ADD = "ADD";
-const MINUS = "MINUS"
-
-const countModifier = (count = 0, action) => {
-  // reducer
+const reducer = (state = [], action) => {
   switch (action.type) {
-    case ADD:
-      return (count = count + 1);
-    case MINUS:
-      return (count = count - 1);
+    case ADD_TODO:
+      return [...state, action.state];
+    case DELETE_TODO:
+      return [];
     default:
-      return count;
+      return state;
   }
 };
 
-const countStore = createStore(countModifier);
+const store = createStore(reducer);
 
-const onChange = () => {number.innerText = countStore.getState()}
-countStore.subscribe(onChange)
+const onSubmit = (e) => {
+  e.preventDefault();
+  const todo = input.value;
+  store.dispatch({ type: ADD_TODO, state: todo });
+  input.value = "";
+};
 
-const handleAdd = () => {countStore.dispatch({type: ADD})}
-const handleMinus = () => {countStore.dispatch({type: MINUS})}
-
-add.addEventListener('click', handleAdd);
-minus.addEventListener('click', handleMinus);
+form.addEventListener("submit", onSubmit);
