@@ -23,15 +23,34 @@ const reducer = (state = [], action) => {
   }
 };
 
+
+
 const renderList = () => {
+  lists.innerHTML = ''
   const state = store.getState();
-  lists.innerHTML = state.map((list) => (
-    `
-      <li id='${list.id}'>
-        ${list.text}
-      </li>
-    `
-  )).join('')
+  state.map((list) => {
+    const li = document.createElement('li');
+    li.id = list.id;
+    li.innerText = list.text;
+    const btn = document.createElement('button');
+    btn.innerText = 'DEL';
+    btn.addEventListener('click', deleteTodo)
+    lists.appendChild(li);
+    li.appendChild(btn);
+  })
+  
+  // lists.innerHTML = state.map((list) => (
+  //   `
+  //     <li id='${list.id}'>
+  //       ${list.text}
+  //       <button>DEL</button>
+  //     </li>
+  //   `
+  // )).join('')
+}
+
+const addTodo = todo => {
+  store.dispatch({ type: ADD_TODO, todo: todo });
 }
 
 
@@ -40,10 +59,8 @@ store.subscribe(renderList);
 const onSubmit = (e) => {
   e.preventDefault();
   const todo = input.value;
-  store.dispatch({ type: ADD_TODO, todo: todo });
+  addTodo(todo);
   input.value = "";
-  console.log(store.getState());
-  
 };
 
 form.addEventListener("submit", onSubmit);
