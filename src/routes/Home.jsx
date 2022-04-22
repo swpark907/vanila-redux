@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import ToDo from "../components/ToDo";
 import { actionCreators } from "../store";
 
 const Home = ({toDos, addToDo}) => {
@@ -14,17 +15,15 @@ const Home = ({toDos, addToDo}) => {
     setText("");
   };
 
-  useEffect(() => {
-    console.log(text);
-  }, [text]);
-
   return (
     <>
       <h2>To Do</h2>
       <form onSubmit={onSubmit}>
         <input type="text" value={text} onChange={onChange} />
       </form>
-      <ul>{JSON.stringify(toDos)}</ul>
+      <ul>{toDos.map((todo)=> (
+        <ToDo {...todo} key={todo.id}></ToDo>
+      ))}</ul>
     </>
   );
 };
